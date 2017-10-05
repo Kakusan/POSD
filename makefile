@@ -48,6 +48,7 @@ mainTerm.o: mainTerm.cpp utTerm.h term.h
 #list.o: list.h list.cpp term.h var.h
 #	g++ -std=c++11 -c list.cpp
 clean:
-	rm -f *.o madRace utAtom utVariable utNumber hw2
+	rm -f *.o hw2
+	#rm -f *.o madRace utAtom utVariable utNumber hw2
 stat:
 	wc *.h *.cpp
