@@ -58,7 +58,7 @@ clean:
 ifeq (${OS}, Windows_NT)
 	del *.o *.exe
 else
-	rm -f *.o hw2
+	rm -f *.o *.exe hw2
 endif
 	
 stat:
