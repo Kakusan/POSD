@@ -1,5 +1,6 @@
-#all: madRace utAtom utVariable utNumber hw2
+
 all: hw2
+
 #madRace: mainMadRace.o
 #	g++ -o madRace mainMadRace.o -lgtest -lpthread
 #mainMadRace.o: mainMadRace.cpp madRace.h utMadRace.h
@@ -21,9 +22,14 @@ all: hw2
 #		g++ -std=c++11 -c mainVariable.cpp
 
 hw2: mainTerm.o
-		g++ -o hw2 mainTerm.o -lgtest -lpthread
+ifeq (${OS}, Windows_NT)
+	g++ -o hw2 mainTerm.o -lgtest
+else
+	g++ -o hw2 mainTerm.o -lgtest -lpthread
+endif
+		
 mainTerm.o: mainTerm.cpp utTerm.h term.h
-		g++ -std=c++11 -c mainTerm.cpp
+	g++ -std=c++11 -c mainTerm.cpp
 
 #exp: mainExp.o
 #	g++ -o exp mainExp.o -lgtest -lpthread
@@ -49,7 +55,11 @@ mainTerm.o: mainTerm.cpp utTerm.h term.h
 #	g++ -std=c++11 -c list.cpp
 
 clean:
+ifeq (${OS}, Windows_NT)
+	del *.o *.exe
+else
 	rm -f *.o hw2
+endif
 	
 stat:
 	wc *.h *.cpp
