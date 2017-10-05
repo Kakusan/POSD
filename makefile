@@ -1,4 +1,3 @@
-
 all: hw2
 
 hw2: mainTerm.o
