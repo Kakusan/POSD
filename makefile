@@ -1,4 +1,4 @@
-all: madRace utAtom utVariable utNumber utTerm
+all: madRace utAtom utVariable utNumber hw2
 
 madRace: mainMadRace.o
 	g++ -o madRace mainMadRace.o -lgtest -lpthread
@@ -20,8 +20,8 @@ utVariable: mainVariable.o
 mainVariable.o: mainVariable.cpp utVariable.h variable.h
 		g++ -std=c++11 -c mainVariable.cpp
 
-utTerm: mainTerm.o
-		g++ -o utTerm mainTerm.o -lgtest -lpthread
+hw2: mainTerm.o
+		g++ -o hw2 mainTerm.o -lgtest -lpthread
 mainTerm.o: mainTerm.cpp utTerm.h term.h
 		g++ -std=c++11 -c mainTerm.cpp
 
@@ -48,6 +48,6 @@ mainTerm.o: mainTerm.cpp utTerm.h term.h
 #list.o: list.h list.cpp term.h var.h
 #	g++ -std=c++11 -c list.cpp
 clean:
-	rm -f *.o madRace utAtom utVariable utNumber utTerm
+	rm -f *.o madRace utAtom utVariable utNumber hw2
 stat:
 	wc *.h *.cpp
