@@ -9,7 +9,7 @@ else
 endif
 		
 mainTerm.o: mainTerm.cpp utTerm.h term.h
-	g++ -std=c++11 -c mainTerm.cpp
+	g++ -std=gnu++0x -c mainTerm.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)
