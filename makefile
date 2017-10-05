@@ -1,24 +1,24 @@
-all: madRace utAtom utVariable utNumber hw2
+#all: madRace utAtom utVariable utNumber hw2
+all: hw2
+#madRace: mainMadRace.o
+#	g++ -o madRace mainMadRace.o -lgtest -lpthread
+#mainMadRace.o: mainMadRace.cpp madRace.h utMadRace.h
+#	g++ -std=c++11 -c mainMadRace.cpp
 
-madRace: mainMadRace.o
-	g++ -o madRace mainMadRace.o -lgtest -lpthread
-mainMadRace.o: mainMadRace.cpp madRace.h utMadRace.h
-	g++ -std=c++11 -c mainMadRace.cpp
+#utAtom: mainAtom.o
+#	g++ -o utAtom mainAtom.o -lgtest -lpthread
+#mainAtom.o: mainAtom.cpp utAtom.h atom.h
+#	g++ -std=c++11 -c mainAtom.cpp
 
-utAtom: mainAtom.o
-	g++ -o utAtom mainAtom.o -lgtest -lpthread
-mainAtom.o: mainAtom.cpp utAtom.h atom.h
-	g++ -std=c++11 -c mainAtom.cpp
+#utNumber: mainNumber.o
+#		g++ -o utNumber mainNumber.o -lgtest -lpthread
+#mainNumber.o: mainNumber.cpp utNumber.h number.h
+#		g++ -std=c++11 -c mainNumber.cpp
 
-utNumber: mainNumber.o
-		g++ -o utNumber mainNumber.o -lgtest -lpthread
-mainNumber.o: mainNumber.cpp utNumber.h number.h
-		g++ -std=c++11 -c mainNumber.cpp
-
-utVariable: mainVariable.o
-		g++ -o utVariable mainVariable.o -lgtest -lpthread
-mainVariable.o: mainVariable.cpp utVariable.h variable.h
-		g++ -std=c++11 -c mainVariable.cpp
+#utVariable: mainVariable.o
+#		g++ -o utVariable mainVariable.o -lgtest -lpthread
+#mainVariable.o: mainVariable.cpp utVariable.h variable.h
+#		g++ -std=c++11 -c mainVariable.cpp
 
 hw2: mainTerm.o
 		g++ -o hw2 mainTerm.o -lgtest -lpthread
