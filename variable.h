@@ -3,17 +3,26 @@
 
 #include <string>
 #include "term.h"
+#include "variable.h"
+
 using std::string;
 
 class Variable : public Term {
 public:
-  Variable(string s) : Term(s) {}
+  Variable(string s) : Term(s) { _termName = "variable"; }
+  bool IsUsed() { return isUsed; }
+  void SetValue(string v) { _value = v; isUsed = true; }
   bool match(Term &term) {
     if (!isUsed) {
-      _value = term.value();
-      isUsed = true;
+      if(!(term.termName() == "variable" && !static_cast<Variable*>(&term)->IsUsed())) {
+        _value = term.value();
+        isUsed = true;
+      }
       return true;
-    } else
+    } 
+    else if (term.value() == _value)
+      return true;
+    else 
       return false;
   }
 
