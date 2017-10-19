@@ -5,6 +5,7 @@
 #include "term.h"
 #include "variable.h"
 #include <algorithm>
+#include <iostream>
 
 using std::string;
 
@@ -15,10 +16,13 @@ public:
   string value() { return _value; }
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }
-  void SetValue(string s) { 
-    std::for_each(variables.begin(), variables.end(), SetValueToVariables(s));
-    _value = s; 
-    isUsed = true; 
+  void SetValue(string s) {
+    if (!isUsed) {
+      _value = s;
+      isUsed = true;
+      for (Variable *v : variables) 
+        v->SetValue(s);
+    }
   }
 
   bool match(Term &term) {
@@ -29,7 +33,7 @@ public:
           SetValue(v->value());
         else if (_symbol != v->symbol()) {
           BecomeCouple(v);
-          //v->BecomeCouple(this);
+          v->BecomeCouple(this);
         }
         return true;
       } else if (v->IsUsed()) {
@@ -51,13 +55,6 @@ public:
   }
 
 private:
-  struct SetValueToVariables {
-    string value;
-    SetValueToVariables(string s) : value(s) {}
-    void operator() (Variable* v) {
-      v->SetValue(value);
-    }
-  };
   bool isUsed = false;
   std::vector<Variable*> variables;
 

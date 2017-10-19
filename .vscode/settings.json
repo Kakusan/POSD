@@ -35,6 +35,7 @@
         "vector": "cpp",
         "algorithm": "cpp",
         "sstream": "cpp",
-        "xmemory": "cpp"
+        "xmemory": "cpp",
+        "iostream": "cpp"
     }
 }
