@@ -6,7 +6,7 @@
 
 TEST(Number, 1) {
   Number number(1);
-  ASSERT_EQ("1", number.symbol());
+  ASSERT_EQ("1.000000", number.symbol());
 }
 
 TEST(Number, match_1_and_2) {

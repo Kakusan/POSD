@@ -9,13 +9,11 @@ using std::string;
 class Term {
   public:
     Term(string s): _symbol(s) {}
-    string symbol() { return _symbol; }
-    string value() { return _value; }
-    string termName() { return _termName; }
+    virtual string symbol() const = 0;
+    virtual string value() = 0;
     virtual bool match(Term &term) = 0;
   
   protected:
-    string _termName;
     string _symbol;
     string _value;
 };

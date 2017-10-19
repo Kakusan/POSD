@@ -9,10 +9,13 @@ using std::string;
 
 class Atom : public Term {
 public:
-  Atom(string s) : Term(s) { _value = s; _termName = "atom"; }
+  Atom(string s) : Term(s) { _value = s;}
+  string symbol() const { return _symbol; }
+  string value() { return _value; }
   bool match(Term &term) {
-    if (term.termName() == "variable" && !static_cast<Variable*>(&term)->IsUsed()) {
-      static_cast<Variable *>(&term)->SetValue(_value);
+    Variable* v = dynamic_cast<Variable*>(&term);
+    if (v && !v->IsUsed()) {
+      v->SetValue(_value);
       return true;
     }
     else if (term.value() == _value)
