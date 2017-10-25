@@ -11,44 +11,52 @@ using std::string;
 
 class Variable : public Term {
 public:
-  Variable(string s) : Term(s) { _value = s;}
+  Variable(string s) : Term(s) { _value = "";}
   string symbol() const { return _symbol; }
-  string value() { return _value; }
+  string value() {
+    if (isUsed)
+      return realThing->value();
+    else
+      return _value;
+  }
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }
-  void SetValue(string s) {
+  void SetValue(Term* t) {
     if (!isUsed) {
-      _value = s;
+      realThing = t;
       isUsed = true;
       for (Variable *v : variables) 
-        v->SetValue(s);
+        v->SetValue(t);
     }
   }
 
   bool match(Term &term) {
     Variable* v = dynamic_cast<Variable*>(&term);
+    //List* l = dynamic_cast<List*>(&term);
     if (v) {
       if (!isUsed) {
         if (v->IsUsed())
-          SetValue(v->value());
+          SetValue(v);
         else if (_symbol != v->symbol()) {
           BecomeCouple(v);
           v->BecomeCouple(this);
         }
         return true;
       } else if (v->IsUsed()) {
-        if (v->value() == _value)
+        if (v->value() == value())
           return true;
         else
           return false;
       } else {
-        v->SetValue(_value);
+        v->SetValue(this);
         return true;
       }
-    } else if (!isUsed) {
-      SetValue(term.value());
+    }
+     //else if (l && l->isExist(this)) {return false;} 
+    else if (!isUsed) {
+      SetValue(&term);
       return true;
-    } else if (term.value() == _value)
+    } else if (term.value() == value())
       return true;
     else
       return false;
@@ -56,6 +64,7 @@ public:
 
 private:
   bool isUsed = false;
+  Term* realThing;
   std::vector<Variable*> variables;
 
 };

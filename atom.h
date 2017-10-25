@@ -15,10 +15,10 @@ public:
   bool match(Term &term) {
     Variable* v = dynamic_cast<Variable*>(&term);
     if (v && !v->IsUsed()) {
-      v->SetValue(_value);
+      v->SetValue(this);
       return true;
     }
-    else if (term.value() == _value)
+    else if (term.value() == value())
       return true;
     else
       return false;

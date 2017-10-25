@@ -41,14 +41,18 @@ public:
 
   bool match(Term &term) {
     Struct * ps = dynamic_cast<Struct *>(&term);
+    Variable* v = dynamic_cast<Variable*>(&term);
     bool isSame = true;
     if (ps && _name.match(ps->_name) && _args.size() == ps->_args.size()) {
         for (int i = 0; i < _args.size(); i++) {
             if (_args[i]->symbol() != ps->_args[i]->symbol())
                 isSame = false;
         }
-    } else 
-        isSame = false;
+    } else if (v && !v->IsUsed()) {
+      v->SetValue(this);
+      return true;
+    } else
+      isSame = false;
     return isSame;
   }
 private:
