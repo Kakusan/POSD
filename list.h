@@ -11,6 +11,7 @@ using std::vector;
 
 class List : public Term {
 public:
+  List(): Term() {}
   List (vector<Term *> const & elements): Term("[]") {
     if (elements.size() > 0) {
       for (int i = 0; i < elements.size(); i++) 
@@ -93,7 +94,7 @@ public:
           elements.push_back(_elements[i]);
         return new List(elements);
       }  else
-        return new List({});
+        return new List();
     } catch (string e) {
       throw "Accessing tail in an empty list";
     }
