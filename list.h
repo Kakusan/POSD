@@ -42,11 +42,22 @@ public:
 
   bool match(Term& term) {
     Variable* v = dynamic_cast<Variable*>(&term);
+    List* l = dynamic_cast<List*>(&term);
     if (v && !v->IsUsed()) {
       v->SetValue(this);
       return true;
-    }
-    else if (term.value() == value())
+    } else if (l) {
+      bool isSame = true;
+      if(_elements.size() != l->elements()->size())
+        isSame = false;
+      else {
+        for (int i = 0; i < _elements.size(); i++) {
+          if (!_elements[i]->match(*(l->elements()->at(i))))
+            isSame = false;
+        }
+      }
+      return isSame;
+    } else if (term.value() == value())
       return true;
     else
       return false;
@@ -59,6 +70,10 @@ public:
         flag = true;
     }
     return flag;
+  }
+
+  vector<Term *>* elements() {
+    return &_elements;
   }
 
 public:

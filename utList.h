@@ -132,14 +132,28 @@ TEST(List, matchToSameListWithDiffVarNameShouldSucceed) {
 // ?- [496, X, terence_tao] = [496, 8128, terence_tao].
 // X = 8128.
 TEST(List, matchToVarToAtominListShouldSucceed) {
-
+  Number n1(496), n2(8128);
+  Variable X("X");
+  Atom a("terence_tao");
+  List l1({&n1, &X, &a});
+  List l2({&n1, &n2, &a});
+  l1.match(l2);
+  EXPECT_EQ(X.value(), n2.value());
 }
 
 // ?- Y = [496, X, terence_tao], X = alan_mathison_turing.
 // Y = [496, alan_mathison_turing, terence_tao],
 // X = alan_mathison_turing.
 TEST(List, matchVarinListToAtomShouldSucceed) {
-
+  Number n(496);
+  Variable X("X"), Y("Y");
+  Atom a1("terence_tao"), a2("alan_mathison_turing");
+  List l1({&n, &X, &a1});
+  List l2({&n, &a2, &a1});
+  Y.match(l1);
+  X.match(a2);
+  EXPECT_EQ(Y.value(), l2.value());
+  EXPECT_EQ(X.value(), a2.value());
 }
 
 // Example: 
