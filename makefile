@@ -7,7 +7,7 @@ else
 	g++ -o hw4 mainTerm.o -lgtest -lpthread
 endif
 		
-mainTerm.o: utTerm.h utAtom.h utNumber.h utVariable.h utStruct.h utList.h
+mainTerm.o: utList.h
 	g++ -std=gnu++0x -c mainTerm.cpp
 
 clean:
