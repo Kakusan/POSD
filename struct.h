@@ -30,7 +30,7 @@ public:
     return output;
   }
 
-  string value() {
+  string value() const {
     string output =_name.value() + "(";
     for (int i = 0; i < _args.size() - 1 ; i++){
         output += _args[i]->value() + ", ";
@@ -40,7 +40,7 @@ public:
   }
 
   bool match(Term &term) {
-    Struct * ps = dynamic_cast<Struct *>(&term);
+    Struct* ps = dynamic_cast<Struct *>(&term);
     Variable* v = dynamic_cast<Variable*>(&term);
     bool isSame = true;
     if (ps && _name.match(ps->_name) && _args.size() == ps->_args.size()) {

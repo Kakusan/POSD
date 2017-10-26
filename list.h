@@ -78,26 +78,21 @@ public:
   }
 
   Term *head() {
-    try {
-      if (_elements.size() > 0)
-        return _elements[0];
-    } catch (string e) { 
-      throw "Accessing head in an empty list";
-    }
+    if (_elements.size() > 0)
+      return _elements[0]; 
+    else
+      throw string("Accessing head in an empty list");
+    
   }
 
   List *tail() {
-    try {
-      if (_elements.size() > 1) {
-        vector<Term *> elements;
-        for (int i = 1; i < _elements.size(); i++)
-          elements.push_back(_elements[i]);
-        return new List(elements);
-      }  else
-        return new List();
-    } catch (string e) {
-      throw "Accessing tail in an empty list";
-    }
+    if (_elements.size() > 0) {
+      vector<Term *> elements = {};
+      for (int i = 1; i < _elements.size(); i++)
+        elements.push_back(_elements[i]);
+      return new List(elements);
+    } else 
+      throw string("Accessing tail in an empty list");
   }
 
 private:

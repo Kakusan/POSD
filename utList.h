@@ -102,8 +102,8 @@ TEST(List, matchToVarOccuredInListShouldFail) {
   Variable X("X");
   Atom a("terence_tao");
   List l({&n, &X, &a});
-
- // EXPECT_FALSE(X.match(l));
+  //這個不行
+  //EXPECT_FALSE(X.match(l));
 }
 
 // ?- [496, X, terence_tao] = [496, X, terence_tao].
@@ -152,6 +152,7 @@ TEST(List, matchVarinListToAtomShouldSucceed) {
   List l2({&n, &a2, &a1});
   Y.match(l1);
   X.match(a2);
+  //轉型問題也炸掉
   //EXPECT_EQ(Y.value(), l2.value());
   //EXPECT_EQ(X.value(), a2.value());
 }
@@ -199,16 +200,24 @@ TEST(List, headAndTailMatching4) {
 // When client still want to get the head of list
 // Then it should throw a string: "Accessing head in an empty list" as an exception.
 TEST (List, emptyExecptionOfHead) {
-  List l;
-  l.head();
+  try {
+    List l;
+    l.head();
+  } catch (string s) {
+    EXPECT_EQ("Accessing head in an empty list", s);
+  }
 }
 
 // Given there is a empty list
 // When client still want to get the tail of list
 // Then it should throw a string: "Accessing tail in an empty list" as an exception.
 TEST (List, emptyExecptionOfTail) {
-  List l;
-  l.tail();
+  try {
+    List l;
+    l.tail();
+  } catch (string s) {
+    EXPECT_EQ("Accessing tail in an empty list", s);
+  }
 }
 
 

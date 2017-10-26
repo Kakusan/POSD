@@ -12,7 +12,7 @@ using std::string;
 class Variable : public Term {
 public:
   Variable(string s) : Term(s) {}
-  string value() {
+  string value() const {
     if (isUsed)
       return realThing->value();
     else
@@ -20,6 +20,7 @@ public:
   }
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }
+  Term* RealThing() { return realThing; }
   void SetValue(Term* t) {
     if (!isUsed) {
       realThing = t;
@@ -32,33 +33,28 @@ public:
   bool match(Term &term) {
     Variable* v = dynamic_cast<Variable*>(&term);
     //List* l = dynamic_cast<List*>(&term);
+
     if (v) {
-      if (!isUsed) {
-        if (v->IsUsed())
-          SetValue(v);
-        else if (_symbol != v->symbol()) {
-          BecomeCouple(v);
-          v->BecomeCouple(this);
-        }
+      if (isUsed && v->IsUsed()) {
+        return realThing->match(*(v->RealThing()));
+      } else if (!isUsed && v->IsUsed()) {
+        SetValue(v->RealThing());
         return true;
-      } else if (v->IsUsed()) {
-        if (v->value() == value())
-          return true;
-        else
-          return false;
-      } else {
-        v->SetValue(this);
+      } else if (isUsed && !v->IsUsed()) {
+        v->SetValue(this->RealThing());
         return true;
-      }
-    }
+      } else if (!isUsed && !v->IsUsed()) {
+        BecomeCouple(v);
+        v->BecomeCouple(this);
+        return true;
+      } 
+    } 
      //else if (l && l->isExist(this)) {return false;} 
     else if (!isUsed) {
       SetValue(&term);
       return true;
-    } else if (term.value() == value())
-      return true;
-    else
-      return false;
+    } else
+      return realThing->match(term);
   }
 
 private:

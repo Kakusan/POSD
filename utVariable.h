@@ -75,8 +75,7 @@ TEST (Variable, num1_to_varY_and_varX_match_varY) {
   Number number(1);
   Y.match(number);
   X.match(Y);
-  EXPECT_EQ("test", Y.value());
-  ASSERT_EQ("test", X.value());
+  ASSERT_EQ(number.value(), X.value());
 }
 
 // ?- X=Y, Y=Z, Z=1
@@ -134,8 +133,10 @@ TEST (Variable, Struct2) {
   Variable Y("Y");
   Struct s(Atom("s"), {&X});
   Atom teddy("teddy");
+
   Y.match(s);
   X.match(teddy);
+
   ASSERT_EQ("Y", Y.symbol());
   ASSERT_EQ("s(teddy)", Y.value());
 }
