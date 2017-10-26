@@ -11,13 +11,12 @@ using std::string;
 
 class Variable : public Term {
 public:
-  Variable(string s) : Term(s) { _value = "";}
-  string symbol() const { return _symbol; }
+  Variable(string s) : Term(s) {}
   string value() {
     if (isUsed)
       return realThing->value();
     else
-      return _value;
+      return symbol();
   }
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }

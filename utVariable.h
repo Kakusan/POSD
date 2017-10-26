@@ -75,7 +75,8 @@ TEST (Variable, num1_to_varY_and_varX_match_varY) {
   Number number(1);
   Y.match(number);
   X.match(Y);
-  ASSERT_EQ("1", X.value());
+  EXPECT_EQ("test", Y.value());
+  ASSERT_EQ("test", X.value());
 }
 
 // ?- X=Y, Y=Z, Z=1
