@@ -30,7 +30,7 @@ public:
     return output;
   }
 
-  string value() {
+  string value() const {
     string output = "[";
     if (_elements.size() > 0) {
       for (int i = 0; i < _elements.size() - 1; i++) 

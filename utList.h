@@ -152,9 +152,8 @@ TEST(List, matchVarinListToAtomShouldSucceed) {
   List l2({&n, &a2, &a1});
   Y.match(l1);
   X.match(a2);
-  List* ll = dynamic_cast<List*>(Y.RealThing());
-  EXPECT_EQ(ll->value(), l2.value());
-  //EXPECT_EQ(Y.RealThing()->value(), l2.value());
+  
+  EXPECT_EQ(Y.value(), l2.value());
   EXPECT_EQ(X.value(), a2.value());
 }
 
