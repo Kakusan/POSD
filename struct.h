@@ -13,6 +13,10 @@ public:
   Struct(Atom const &name, std::vector<Term *> args):Term(name.symbol()), _name(name), _args(args) {
   }
 
+  int arity() {
+    return _args.size();
+  }
+  
   Term* args(int index) {
     return _args[index];
   }

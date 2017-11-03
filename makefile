@@ -1,20 +1,20 @@
-all: hw4
+all: hw5
 
-hw4: mainTerm.o
+hw5: mainTerm.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw4 mainTerm.o -lgtest
+	g++ -o hw5 mainTerm.o -lgtest
 else
-	g++ -o hw4 mainTerm.o -lgtest -lpthread
+	g++ -o hw5 mainTerm.o -lgtest -lpthread
 endif
 		
-mainTerm.o: utList.h
+mainTerm.o: utScanner.h parser.h
 	g++ -std=gnu++0x -c mainTerm.cpp
 
 clean:
 ifeq (${OS}, Windows_NT)
-	del *.o *.exe hw4
+	del *.o *.exe hw5
 else
-	rm -f *.o *.exe hw4
+	rm -f *.o *.exe hw5
 endif
 	
 stat:
