@@ -23,7 +23,7 @@ public:
       return new Number(_scanner.tokenValue());
     } else if (token == ATOM) {
         Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
-        if (_scanner.currentChar() == '(' ) {
+        if (_scanner.currentChar() == '(') {
           _scanner.nextToken() ;
           vector<Term*> terms = getArgs();
           if (_currentToken == ')')
@@ -32,7 +32,12 @@ public:
           return atom;
     } else if (token == NUMBER) {
         return new Number(_scanner.tokenValue());
-    } else
+    } else if (_scanner.currentChar() == '[' ) {
+        _scanner.nextToken() ;
+        vector<Term*> terms = getArgs();
+        if (_currentToken == ']')
+          return new List(&terms);
+  } else
         return nullptr;
   }
 
