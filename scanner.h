@@ -31,10 +31,6 @@ public:
         string s = extractVar();
         processToken<VAR>(s);
         return VAR;
-      } else if (currentChar() == '[' || currentChar() == ']') {
-        char c = currentChar();
-        pos++;
-        return c;
       } else {
         _tokenValue = NONE;
         return extractChar();
@@ -50,8 +46,37 @@ public:
 
   int position() const {return pos;}
 
+  void printAllChar() {
+    std::cout << ">";
+    for (int i = 0; i < buffer.size(); i++) {
+      std::cout << "A[";
+      std::cout << i;
+      std::cout << "] = ";
+      std::cout << buffer[i];
+      std::cout << "喔";
+    }
+    std::cout << "<";
+  }
+
+  void printPosition() {
+    std::cout << "(位置";
+    std::cout << position();
+    std::cout << ", ";
+    std::cout << "元素";
+    std::cout << buffer[pos-1];
+    std::cout << "). ";
+  }
+
+  char lastChar() {
+    return buffer[pos-1];
+  }
+
   char currentChar() {
     return buffer[pos];
+  }
+
+  char extractChar() {
+    return buffer[pos++];
   }
 
   // extractX: extract X and set position right after X
@@ -77,22 +102,6 @@ public:
     int posBegin = position();
     for (;isalnum(buffer[pos]) || buffer[pos] == '_'; ++pos);
     return buffer.substr(posBegin, pos-posBegin);
-  }
-
-  char extractChar() {
-      return buffer[pos++];
-      ///////
-      //////
-      ///
-      //
-      //
-      //
-      //待修正
-      //
-      //
-      ///
-      ////
-      ///////////
   }
 
 private:

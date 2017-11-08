@@ -114,7 +114,9 @@ TEST_F(ParserTest, parseListEmpty) {
 // Then it should return a Variable.
 // And #symbol() of Variable should return "_date".
 TEST_F(ParserTest, parseVar) {
-
+  Scanner scanner("_date");
+  Parser parser(scanner);
+  ASSERT_EQ("_date", parser.createTerm()->symbol());
 }
 
 
@@ -122,7 +124,9 @@ TEST_F(ParserTest, parseVar) {
 // When parser parses all terms via scanner.
 // Then it should return nothing.
 TEST_F(ParserTest, listOfTermsEmpty) {
-
+  Scanner scanner("");
+  Parser parser(scanner);
+  ASSERT_EQ(nullptr, parser.createTerm());
 }
 
 
@@ -131,7 +135,9 @@ TEST_F(ParserTest, listOfTermsEmpty) {
 // Then it should return a Struct.
 // And #symbol() of Strcut should return "s(s(s(s(1))))".
 TEST_F(ParserTest, parseStructOfStructAllTheWay) {
-
+  Scanner scanner("s(s(s(s(1))))");
+  Parser parser(scanner);
+  ASSERT_EQ("s(s(s(s(1))))", parser.createTerm()->symbol());
 }
 
 
@@ -140,7 +146,9 @@ TEST_F(ParserTest, parseStructOfStructAllTheWay) {
 // Then it should return a List.
 // And #symbol() of List should return "[[1], []]".
 TEST_F(ParserTest, parseListOfLists) {
-
+  Scanner scanner("   [  [1], [] ]");
+  Parser parser(scanner);
+  ASSERT_EQ("[[1], []]", parser.createTerm()->symbol());
 }
 
 
@@ -149,7 +157,9 @@ TEST_F(ParserTest, parseListOfLists) {
 // Then it should return a List.
 // And #symbol() of List should return "[[1], [], s(s(1))]".
 TEST_F(ParserTest, parseListOfListsAndStruct) {
-
+  Scanner scanner("   [  [1], [], s(s(1)) ]   ");
+  Parser parser(scanner);
+  ASSERT_EQ("[[1], [], s(s(1))]", parser.createTerm()->symbol());
 }
 
 // Given there is string: "   [1, 2]" in scanner.
@@ -157,14 +167,21 @@ TEST_F(ParserTest, parseListOfListsAndStruct) {
 // Then it should return a List.
 // And #symbol() of List should return "[1, 2]".
 TEST_F(ParserTest, parseList) {
-
+  Scanner scanner("   [1, 2]");
+  Parser parser(scanner);
+  ASSERT_EQ("[1, 2]", parser.createTerm()->symbol());
 }
 
 // Given there is string: "[1,2)" in scanner.
 // When parser parses all terms via scanner.
 // Then it should return a string: "unexpected token" as exception.
 TEST_F(ParserTest, illegal1) {
-
+  try {
+    Scanner scanner("[1,2)");
+    Parser parser(scanner);
+  } catch (string s) {
+    EXPECT_EQ("unexpected token", s);
+  }
 }
 
 // Given there is string: ".(1,[])" in scanner.
