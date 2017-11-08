@@ -19,7 +19,7 @@ public:
       else if (isdigit(currentChar())) {
         _tokenValue = extractNumber();
         return NUMBER;
-      } else if (islower(currentChar())) {
+      } else if (islower(currentChar()) || currentChar() == '.') {
         string s = extractAtom();
         processToken<ATOM>(s);
         return ATOM;
@@ -88,7 +88,7 @@ public:
 
   string extractAtom() {
     int posBegin = position();
-    for (;isalnum(buffer[pos]); ++pos);
+    for (;isalnum(buffer[pos]) || currentChar() == '.'; ++pos);
     return buffer.substr(posBegin, pos-posBegin);
   }
 

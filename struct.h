@@ -27,19 +27,23 @@ public:
 
   string symbol() const {
     string output =_name.symbol() + "(";
-    for (int i = 0; i < _args.size() - 1 ; i++){
-        output += _args[i]->symbol() + ", ";
+    if (_args.size() > 0) {
+      for (int i = 0; i < _args.size() - 1 ; i++)
+          output += _args[i]->symbol() + ", ";
+      output += _args[_args.size()-1]-> symbol();
     }
-    output += _args[_args.size()-1]-> symbol() + ")";
+    output += ")";
     return output;
   }
 
   string value() const {
     string output =_name.value() + "(";
-    for (int i = 0; i < _args.size() - 1 ; i++){
+    if (_args.size() > 0) {
+      for (int i = 0; i < _args.size() - 1 ; i++)
         output += _args[i]->value() + ", ";
+      output += _args[_args.size()-1]-> value();
     }
-    output += _args[_args.size()-1]-> value() + ")";
+    output += ")";
     return output;
   }
 

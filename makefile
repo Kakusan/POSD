@@ -7,7 +7,7 @@ else
 	g++ -o hw5 mainTerm.o -lgtest -lpthread
 endif
 		
-mainTerm.o: utScanner.h parser.h
+mainTerm.o: parser.h
 	g++ -std=gnu++0x -c mainTerm.cpp
 
 clean:
