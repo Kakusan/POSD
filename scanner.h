@@ -19,7 +19,7 @@ public:
       else if (isdigit(currentChar())) {
         _tokenValue = extractNumber();
         return NUMBER;
-      }  else if (islower(currentChar())) {
+      } else if (islower(currentChar())) {
         string s = extractAtom();
         processToken<ATOM>(s);
         return ATOM;
@@ -31,6 +31,10 @@ public:
         string s = extractVar();
         processToken<VAR>(s);
         return VAR;
+      } else if (currentChar() == '[' || currentChar() == ']') {
+        char c = currentChar();
+        pos++;
+        return c;
       } else {
         _tokenValue = NONE;
         return extractChar();
@@ -40,7 +44,7 @@ public:
   int tokenValue() const {return _tokenValue;}
 
   int skipLeadingWhiteSpace() {
-    for (; (buffer[pos] == ' ' || buffer[pos] == '\t') && pos<buffer.length(); ++pos);
+    for (; (buffer[pos] == ' ' || buffer[pos] == '\t') && pos<buffer.length(); pos++);
     return position();
   }
 
@@ -76,7 +80,19 @@ public:
   }
 
   char extractChar() {
-    return buffer[pos++];
+      return buffer[pos++];
+      ///////
+      //////
+      ///
+      //
+      //
+      //
+      //待修正
+      //
+      //
+      ///
+      ////
+      ///////////
   }
 
 private:

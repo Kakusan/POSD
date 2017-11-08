@@ -10,6 +10,7 @@ using std::string;
 #include "global.h"
 #include "scanner.h"
 #include "struct.h"
+#include "list.h"
 
 class Parser{
 public:
@@ -18,9 +19,9 @@ public:
   Term* createTerm() {
     int token = _scanner.nextToken();
     if (token == VAR) {
-      return new Variable(symtable[_scanner.tokenValue()].first);
+        return new Variable(symtable[_scanner.tokenValue()].first);
     } else if (token == NUMBER) {
-      return new Number(_scanner.tokenValue());
+        return new Number(_scanner.tokenValue());
     } else if (token == ATOM) {
         Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
         if (_scanner.currentChar() == '(') {
@@ -32,12 +33,17 @@ public:
           return atom;
     } else if (token == NUMBER) {
         return new Number(_scanner.tokenValue());
-    } else if (_scanner.currentChar() == '[' ) {
-        _scanner.nextToken() ;
+    } else if (token == '[') {
+        std::cout << "我是LIST";
+        char c = _scanner.nextToken();
         vector<Term*> terms = getArgs();
-        if (_currentToken == ']')
-          return new List(&terms);
-  } else
+        std::cout << "現在的currentChar()是";
+        std::cout << c;
+        std::cout << "喔";
+        if (c == ']')
+          return new List(terms);
+    } else
+        std::cout << "我是NULL";
         return nullptr;
   }
 
