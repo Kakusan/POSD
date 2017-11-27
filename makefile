@@ -1,10 +1,10 @@
-all: hw5
+all: hw6
 
-hw5: mainTerm.o
+hw6: mainTerm.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw5 mainTerm.o -lgtest
+	g++ -o hw6 mainTerm.o -lgtest
 else
-	g++ -o hw5 mainTerm.o -lgtest -lpthread
+	g++ -o hw6 mainTerm.o -lgtest -lpthread
 endif
 		
 mainTerm.o: parser.h
@@ -12,9 +12,9 @@ mainTerm.o: parser.h
 
 clean:
 ifeq (${OS}, Windows_NT)
-	del *.o *.exe hw5
+	del *.o *.exe hw6
 else
-	rm -f *.o *.exe hw5
+	rm -f *.o *.exe hw6
 endif
 	
 stat:
