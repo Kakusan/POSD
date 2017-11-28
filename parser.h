@@ -62,19 +62,39 @@ public:
       throw string("unexpected token");
     }
   }
-
+  //std::cout << "逗號囉" << std::endl;
   void matchings() {
-    Term* currentTerm = createTerm();
-    if (currentTerm != nullptr) {
-      _terms.push_back(currentTerm);
-      Node currentNode(TERM, currentTerm);
-      while ((_currentToken = _scanner.nextToken()) == '=') {
-        Term* nextTerm = createTerm();
-        _terms.push_back(nextTerm);
-        Node nextNode(TERM, nextTerm);
-        _node = new Node(EQUALITY, &currentNode, &nextNode);
+    do {
+      if (_currentToken == ',') {
+        _currentToken = '0';
+        Node* currentNode = _node;
+        matchings();
+        Node* nextNode = _node;
+        _node = new Node(COMMA, currentNode, nextNode);
+      } else {
+        Term* currentTerm = createTerm();
+        if (currentTerm != nullptr) {
+          Term* t = searchForSameTerms(currentTerm);
+          _terms.push_back(t);
+          Node *currentNode = new Node(TERM, t);
+          if ((_currentToken = _scanner.nextToken()) == '=') {
+            Term* nextTerm = createTerm();    
+            Term* t2 = searchForSameTerms(nextTerm);
+            _terms.push_back(t2);
+            Node *nextNode = new Node(TERM, t2);
+            _node = new Node(EQUALITY, currentNode, nextNode);
+          }
+        }
       }
+    } while ((_currentToken = _scanner.nextToken()) == ',');
+  }
+
+  Term* searchForSameTerms(Term* t) {
+    for (int i = 0; i < _terms.size(); i++) {
+      if(_terms[i]->symbol() == t->symbol())
+        t = _terms[i];
     }
+    return t;
   }
 
   Node* expressionTree() {
