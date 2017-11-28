@@ -209,6 +209,13 @@ TEST_F(ParserTest, OneMatching) {
   Node* et = parser.expressionTree();
   EXPECT_EQ(EQUALITY, et->payload);
 
+  std::cout << "我的left是";
+  std::cout << et->left->term;
+  std::cout << "喔" << std::endl;
+  std::cout << "我的right是";
+  std::cout << et->right->term;
+  std::cout << "喔" << std::endl;
+
   EXPECT_TRUE(et->evaluate());
   EXPECT_EQ("1", terms[0]->value());
 }
