@@ -43,7 +43,19 @@ public:
     _scanner.nextToken();
     createTerms();
     if (_currentToken == ')') {
-      vector<Term *> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
+      vector<Term*> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
+
+      std::cout << "args大小" << args.size() << std::endl; 
+      std::cout << "_totalArgs大小" << _totalArgs.size() << std::endl; 
+      for (int i = 0; i < args.size(); i++) {
+        for (int j = 0; j < _totalArgs.size(); j++) {
+          if(args[i]->symbol() == _totalArgs[j]->symbol()) {
+            args[i] = _totalArgs[j];
+            std::cout<< args[i]->symbol() << "近來囉" << std::endl; 
+          }
+        }
+      }
+
       _terms.erase(_terms.begin() + startIndexOfStructArgs, _terms.end());
       return new Struct(structName, args);
     } else {
@@ -66,33 +78,44 @@ public:
   void matchings() {
     do {
       if (_currentToken == ',') {
+        currentOperator = ',';
         _currentToken = '0';
         Node* currentNode = _node;
         matchings();
         Node* nextNode = _node;
         _node = new Node(COMMA, currentNode, nextNode);
+      } else if (_currentToken == ';') {
+        _totalArgs.clear();
+        currentOperator = ';';
+        _currentToken = '0';
+        Node* currentNode = _node;
+        matchings();
+        Node* nextNode = _node;
+        _node = new Node(SEMICOLON, currentNode, nextNode);
       } else {
         Term* currentTerm = createTerm();
         if (currentTerm != nullptr) {
-          Term* t = searchForSameTerms(currentTerm);
-          _terms.push_back(t);
-          Node *currentNode = new Node(TERM, t);
+          currentTerm = searchForSameTerms(currentTerm);
+          _totalArgs.push_back(currentTerm);
+          _terms.push_back(currentTerm);
+          Node *currentNode = new Node(TERM, searchForSameTerms(currentTerm));
           if ((_currentToken = _scanner.nextToken()) == '=') {
             Term* nextTerm = createTerm();    
-            Term* t2 = searchForSameTerms(nextTerm);
-            _terms.push_back(t2);
-            Node *nextNode = new Node(TERM, t2);
+            nextTerm = searchForSameTerms(nextTerm);
+            _totalArgs.push_back(nextTerm);
+            _terms.push_back(nextTerm);
+            Node *nextNode = new Node(TERM, searchForSameTerms(nextTerm));
             _node = new Node(EQUALITY, currentNode, nextNode);
           }
         }
       }
-    } while ((_currentToken = _scanner.nextToken()) == ',');
+    } while ((_currentToken = _scanner.nextToken()) == ',' || _currentToken == ';');
   }
 
   Term* searchForSameTerms(Term* t) {
-    for (int i = 0; i < _terms.size(); i++) {
-      if(_terms[i]->symbol() == t->symbol())
-        t = _terms[i];
+    for (int i = 0; i < _totalArgs.size(); i++) {
+      if(_totalArgs[i]->symbol() == t->symbol())
+        t = _totalArgs[i];
     }
     return t;
   }
@@ -101,7 +124,15 @@ public:
     return _node;
   }
 
-  vector<Term *>& getTerms() {
+  vector<Term*>& getTerms() {
+    if(_totalArgs.size() == 6) {
+      std::cout << "_totalArgs[0]" << _totalArgs[0]->value() << std::endl; 
+      std::cout << "_totalArgs[1]" << _totalArgs[1]->value() << std::endl; 
+      std::cout << "_totalArgs[2]" << _totalArgs[2]->value() << std::endl; 
+      std::cout << "_totalArgs[3]" << _totalArgs[3]->value() << std::endl; 
+      std::cout << "_totalArgs[4]" << _totalArgs[4]->value() << std::endl; 
+      std::cout << "_totalArgs[5]" << _totalArgs[5]->value() << std::endl; 
+    }
     return _terms;
   }
 
@@ -115,16 +146,21 @@ private:
     Term* term = createTerm();
     if (term != nullptr) {
       _terms.push_back(term);
+      _totalArgs.push_back(term);
       while ((_currentToken = _scanner.nextToken()) == ',') {
-        _terms.push_back(createTerm());
+        Term* nextTerm = createTerm();
+        _terms.push_back(nextTerm);
+        _totalArgs.push_back(nextTerm);
       }
     }
   }
 
 private:
-  vector<Term *> _terms;
+  vector<Term*> _terms;
+  vector<Term*> _totalArgs;
   Scanner _scanner;
   int _currentToken;
+  int currentOperator;
   Node* _node;
 
 };

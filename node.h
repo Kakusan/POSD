@@ -15,9 +15,9 @@ class Node {
     Node(Operators op, Node* l, Node* r):payload(op), term(0), left(l), right(r) {}
 		
     bool evaluate() {
-      if (payload == EQUALITY)
+      if (payload == EQUALITY) 
         left->term->match(*(right->term));
-			else if (payload == COMMA) {
+			else if (payload == COMMA || payload == SEMICOLON) {
         left->evaluate();
 				right->evaluate();
 			}

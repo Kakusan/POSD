@@ -33,7 +33,6 @@ public:
   bool match(Term &term) {
     Variable* v = dynamic_cast<Variable*>(&term);
     //List* l = dynamic_cast<List*>(&term);
-
     if (v) {
       if (isUsed && v->IsUsed()) {
         return realThing->match(*(v->RealThing()));
