@@ -46,7 +46,7 @@ public:
       vector<Term*> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
 
       for (int i = 0; i < args.size(); i++) {
-        for (int j = 0; j < _totalArgs.size(); j++) {
+        for (int j = 0; j < _totalArgs.size() - 1; j++) {
           if(args[i]->symbol() == _totalArgs[j]->symbol())
             args[i] = _totalArgs[j];
         }
