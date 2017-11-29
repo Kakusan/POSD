@@ -45,14 +45,10 @@ public:
     if (_currentToken == ')') {
       vector<Term*> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
 
-      std::cout << "args大小" << args.size() << std::endl; 
-      std::cout << "_totalArgs大小" << _totalArgs.size() << std::endl; 
       for (int i = 0; i < args.size(); i++) {
-        for (int j = 0; j < _totalArgs.size(); j++) {
-          if(args[i]->symbol() == _totalArgs[j]->symbol()) {
+        for (int j = 0; j < _totalArgs.size() - 1; j++) {
+          if(args[i]->symbol() == _totalArgs[j]->symbol())
             args[i] = _totalArgs[j];
-            std::cout<< args[i]->symbol() << "近來囉" << std::endl; 
-          }
         }
       }
 
@@ -125,14 +121,6 @@ public:
   }
 
   vector<Term*>& getTerms() {
-    if(_totalArgs.size() == 6) {
-      std::cout << "_totalArgs[0]" << _totalArgs[0]->value() << std::endl; 
-      std::cout << "_totalArgs[1]" << _totalArgs[1]->value() << std::endl; 
-      std::cout << "_totalArgs[2]" << _totalArgs[2]->value() << std::endl; 
-      std::cout << "_totalArgs[3]" << _totalArgs[3]->value() << std::endl; 
-      std::cout << "_totalArgs[4]" << _totalArgs[4]->value() << std::endl; 
-      std::cout << "_totalArgs[5]" << _totalArgs[5]->value() << std::endl; 
-    }
     return _terms;
   }
 
