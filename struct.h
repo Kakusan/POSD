@@ -7,11 +7,15 @@
 
 using std::string;
 
+class Iterator;
+
 class Struct : public Term
 {
 public:
   Struct(Atom const &name, std::vector<Term *> args):Term(name.symbol()), _name(name), _args(args) {
   }
+
+  Iterator* createIterator();
 
   int arity() {
     return _args.size();

@@ -1,20 +1,20 @@
-all: hw6
+all: hw7
 
-hw6: mainTerm.o
+hw7: mainTerm.o
 ifeq (${OS}, Windows_NT)
-	g++ -o hw6 mainTerm.o -lgtest
+	g++ -o hw7 mainTerm.o -lgtest
 else
-	g++ -o hw6 mainTerm.o -lgtest -lpthread
+	g++ -o hw7 mainTerm.o -lgtest -lpthread
 endif
 		
-mainTerm.o: parser.h
-	g++ -std=gnu++0x -c mainTerm.cpp
+mainTerm.o: utIterator.h
+	g++ -std=gnu++0x -c mainTerm.cpp 
 
 clean:
 ifeq (${OS}, Windows_NT)
-	del *.o *.exe hw6
+	del *.o *.exe hw7
 else
-	rm -f *.o *.exe hw6
+	rm -f *.o *.exe hw7
 endif
 	
 stat:

@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
   
-#include "utParser.h" 
+#include "utIterator.h" 
+#include "struct.cpp" 
+#include "list.cpp" 
 
 int main( int argc , char **argv )
 {

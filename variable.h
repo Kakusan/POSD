@@ -6,6 +6,7 @@
 #include "variable.h"
 #include <algorithm>
 #include <iostream>
+// #include "iterator.h"
 
 using std::string;
 
@@ -18,6 +19,11 @@ public:
     else
       return symbol();
   }
+
+  // Iterator* createIterator() {
+  //   return new NullIterator(this);
+  // }
+
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }
   Term* RealThing() { return realThing; }

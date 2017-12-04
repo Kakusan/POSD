@@ -9,6 +9,8 @@
 using std::string;
 using std::vector;
 
+class Iterator;
+
 class List : public Term {
 public:
   List(): Term() {}
@@ -18,6 +20,8 @@ public:
         _elements.push_back(elements[i]);
     }
   }
+
+  Iterator* createIterator();
 
   string symbol() const {
     string output = "[";
