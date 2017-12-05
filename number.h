@@ -14,9 +14,9 @@ class Number : public Term {
 public:
   Number(double db) : Term(db) {}
 
-  Iterator* createIterator() {
-    return new NormalIterator<Number>(this);
-  }
+  Iterator* createNormalIterator() { return new NormalIterator<Number>(this); }
+  Iterator* createBFSIterator() { return new BFSIterator<Number>(this); }
+  Iterator* createDFSIterator() { return new DFSIterator<Number>(this); }
 
   bool match(Term &term) {
     Variable *v = dynamic_cast<Variable *>(&term);

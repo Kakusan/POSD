@@ -6,9 +6,10 @@
 #include "variable.h"
 #include <algorithm>
 #include <iostream>
-// #include "iterator.h"
 
 using std::string;
+
+class Iterator;
 
 class Variable : public Term {
 public:
@@ -20,9 +21,9 @@ public:
       return symbol();
   }
 
-  // Iterator* createIterator() {
-  //   return new NullIterator(this);
-  // }
+  Iterator* createNormalIterator();
+  Iterator* createBFSIterator();
+  Iterator* createDFSIterator();
 
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }

@@ -21,7 +21,9 @@ public:
     }
   }
 
-  Iterator* createIterator();
+  Iterator* createNormalIterator();
+  Iterator* createBFSIterator();
+  Iterator* createDFSIterator();
 
   string symbol() const {
     string output = "[";

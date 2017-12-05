@@ -4,17 +4,18 @@
 #include <string>
 #include "term.h"
 #include "variable.h"
-//#include "iterator.h"
 
 using std::string;
+
+class Iterator;
 
 class Atom : public Term {
 public:
   Atom(string s) : Term(s) {}
 
-  // Iterator* createIterator() {
-  //   return new NullIterator(this);
-  // }
+  Iterator* createNormalIterator();
+  Iterator* createBFSIterator();
+  Iterator* createDFSIterator();
 
   bool match(Term &term) {
     Variable *v = dynamic_cast<Variable *>(&term);

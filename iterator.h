@@ -4,6 +4,9 @@
 #include <typeinfo>
 #include "struct.h"
 #include "list.h"
+#include <vector>
+
+using std::vector;
 
 class Iterator {
 public:
@@ -16,28 +19,33 @@ public:
 template<class T> 
 class NormalIterator : public Iterator {
 public:
-  friend class List;
+  friend class Atom;
+  friend class Number;  
+  friend class Variable;
   friend class Struct;
-  friend class Number;
+  friend class List;
   
   void first() { _index = 0; }
-
   void next() { _index++; }
 
   Term* currentItem() const { 
-    if(typeid(T) == typeid(Struct))
-      return _t->args(_index);
-    else if(typeid(T) == typeid(List))
-      return _t->elements()->at(_index);
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s)
+      return s->args(_index);
+    else if (l)
+      return l->elements()->at(_index);
     else 
       return nullptr;
   }
 
   bool isDone() const { 
-    if(typeid(T) == typeid(Struct))
-      return _index >= _t->arity();
-    else if(typeid(T) == typeid(List))
-      return _index >= _t->elements()->size();
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s)
+      return _index >= s->arity();
+    else if (l)
+      return _index >= l->elements()->size();
     else 
       return true;
    }
@@ -48,67 +56,93 @@ private:
   T* _t;
 };
 
-// class NullIterator : public Iterator{
-// public:
-//   NullIterator(Term *n){}
-//   void first(){}
-//   void next(){}
-//   Term* currentItem() const{
-//       return nullptr;
-//   }
-//   bool isDone() const {
-//     return true;
-//   }
+template<class T> 
+class BFSIterator : public Iterator {
+public:
+  friend class Atom;
+  friend class Number;  
+  friend class Variable;
+  friend class Struct;
+  friend class List;
 
-// };
+  void first() { _index = 0; }
+  void next() { 
+    _index++; 
+    Iterator it = currentItem().createBFSIterator()
+    if(!it.isDone())
+      _itList.push_back(currentItem().createBFSIterator());
+  }
 
-// class StructIterator : public Iterator {
-// public:
-//   friend class Struct;
+  Term* currentItem() const { 
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s) {
+      if(s->args(_index))
+      return s->args(_index);
+    }
+    else if (l)
+      return l->elements()->at(_index);
+    else 
+      return nullptr;
+  }
+
+  bool isDone() const { 
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s)
+      return _index >= s->arity();
+    else if (l)
+      return _index >= l->elements()->size();
+    else 
+      return true;
+   }
+
+private:
+  BFSIterator(T *t): _index(0), _t(t) {}
+  int _index;
+  T* _t;
+  vector<Iterator*> _itList;
+  int _itListIndex = 0;
+};
+
+template<class T> 
+class DFSIterator : public Iterator {
+public:
+  friend class Atom;
+  friend class Number;  
+  friend class Variable;
+  friend class Struct;
+  friend class List;
   
-//   void first() {
-//     _index = 0;
-//   }
+  void first() { _index = 0; }
+  void next() { _index++; }
 
-//   Term* currentItem() const {
-//     return _s->args(_index);
-//   }
+  Term* currentItem() const { 
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s)
+      return s->args(_index);
+    else if (l)
+      return l->elements()->at(_index);
+    else 
+      return nullptr;
+  }
 
-//   bool isDone() const {
-//     return _index >= _s->arity();
-//   }
+  bool isDone() const { 
+    Struct* s = dynamic_cast<Struct*>(_t);
+    List* l = dynamic_cast<List*>(_t);
+    if (s)
+      return _index >= s->arity();
+    else if (l)
+      return _index >= l->elements()->size();
+    else 
+      return true;
+   }
 
-//   void next() {
-//     _index++;
-//   }
-// private:
-//   StructIterator(Struct *s): _index(0), _s(s) {}
-//   int _index;
-//   Struct* _s;
-// };
+private:
+  DFSIterator(T *t): _index(0), _t(t) {}
+  int _index;
+  T* _t;
+};
 
-// class ListIterator : public Iterator {
-// public:
-//   friend class List;
-
-//   void first() {
-//     _index = 0;
-//   }
-
-//   Term* currentItem() const {
-//     return _list->elements()->at(_index);
-//   }
-
-//   bool isDone() const {
-//     return _index >= _list->elements()->size();
-//   }
-
-//   void next() {
-//     _index++;
-//   }
-// private:
-//   ListIterator(List *list) : _index(0), _list(list) {}
-//   int _index;
-//   List *_list;
-// };
 #endif
