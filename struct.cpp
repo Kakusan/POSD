@@ -1,7 +1,7 @@
 #include "struct.h"
 #include "iterator.h"
 
-Iterator * Struct::createIterator()
+Iterator* Struct::createIterator()
 {
-  return new StructIterator(this);
+  return new NormalIterator<Struct>(this);
 }

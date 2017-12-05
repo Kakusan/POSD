@@ -15,7 +15,7 @@ public:
   Number(double db) : Term(db) {}
 
   Iterator* createIterator() {
-    return new NullIterator(this);
+    return new NormalIterator<Number>(this);
   }
 
   bool match(Term &term) {
