@@ -1,17 +1,17 @@
 #include "list.h"
 #include "iterator.h"
 
-Iterator<Term>* List::createNormalIterator()
+Iterator<Term*>* List::createNormalIterator()
 {
-  return new NormalIterator<Term>(this);
+  return new NormalIterator<Term*>(this);
 }
 
-Iterator<Term>* List::createBFSIterator()
+Iterator<Term*>* List::createBFSIterator()
 {
-  return new BFSIterator<Term>(this);
+  return new BFSIterator<Term*>(this);
 }
 
-Iterator<Term>* List::createDFSIterator()
+Iterator<Term*>* List::createDFSIterator()
 {
-  return new DFSIterator<Term>(this);
+  return new DFSIterator<Term*>(this);
 }

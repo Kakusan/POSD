@@ -14,9 +14,9 @@ class Term {
     virtual string symbol() const { return _symbol; }
     virtual string value() const { return symbol(); }
     virtual bool match(Term &term) = 0;
-    virtual Iterator<Term>* createNormalIterator() = 0;
-    virtual Iterator<Term>* createBFSIterator() = 0;
-    virtual Iterator<Term>* createDFSIterator() = 0;
+    virtual Iterator<Term*>* createNormalIterator() = 0;
+    virtual Iterator<Term*>* createBFSIterator() = 0;
+    virtual Iterator<Term*>* createDFSIterator() = 0;
 
   protected:
     Term (): _symbol("") {}

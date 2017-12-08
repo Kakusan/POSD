@@ -13,7 +13,7 @@ class Iterator {
 public:
   virtual void first() = 0;
   virtual void next() = 0;
-  virtual T* currentItem() const = 0;
+  virtual T currentItem() const = 0;
   virtual bool isDone() const = 0;
 };
 
@@ -29,7 +29,7 @@ public:
   void first() { _index = 0; }
   void next() { _index++; }
 
-  T* currentItem() const { 
+  T currentItem() const { 
     Struct* s = dynamic_cast<Struct*>(_t);
     List* l = dynamic_cast<List*>(_t);
     if (s)
@@ -52,9 +52,9 @@ public:
    }
 
 private:
-  NormalIterator(T *t): _index(0), _t(t) {}
+  NormalIterator(T t): _index(0), _t(t) {}
   int _index;
-  T* _t;
+  T _t;
 };
 
 template<class T> 
@@ -71,7 +71,7 @@ public:
 
     Struct* s = dynamic_cast<Struct*>(_t);
     List* l = dynamic_cast<List*>(_t);
-    vector<T*> terms;
+    vector<T> terms;
     if (s) {
       for (int i = 0; i < s->arity(); i++)
         terms.push_back(s->args(i));
@@ -81,23 +81,23 @@ public:
     }
     _totalTerms = makeBFSTree(terms);
   
-    std::cout << "走訪順序為[ ";
-    for(int i = 0; i < _totalTerms.size() - 1; i++)
-      std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
-    std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
+    // std::cout << "走訪順序為[ ";
+    // for(int i = 0; i < _totalTerms.size() - 1; i++)
+    //   std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
+    // std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
   }
 
   void next() { _index++; }
-  T* currentItem() const { return _totalTerms[_index]; }
+  T currentItem() const { return _totalTerms[_index]; }
   bool isDone() const { return _index >= _totalTerms.size(); }
 
 private:
-  BFSIterator(T *t): _index(0), _t(t) {}
-  vector<T*> makeBFSTree(vector<T*> _inputTerms) {
-    vector<T*> outputTerms;
-    vector<T*> subTerms;
+  BFSIterator(T t): _index(0), _t(t) {}
+  vector<T> makeBFSTree(vector<T> _inputTerms) {
+    vector<T> outputTerms;
+    vector<T> subTerms;
 
-    for (T* t : _inputTerms) {
+    for (T t : _inputTerms) {
       Struct* s = dynamic_cast<Struct*>(t);
       List* l = dynamic_cast<List*>(t);
       if (s) {
@@ -113,15 +113,15 @@ private:
       }
     }
     if (subTerms.size() > 0) {
-      vector<T*> childrenTerms = makeBFSTree(subTerms);
+      vector<T> childrenTerms = makeBFSTree(subTerms);
       outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
     }
     return outputTerms;
 
   }
   int _index;
-  T* _t;
-  vector<T*> _totalTerms;
+  T _t;
+  vector<T> _totalTerms;
 };
 
 template<class T> 
@@ -138,7 +138,7 @@ public:
 
     Struct* s = dynamic_cast<Struct*>(_t);
     List* l = dynamic_cast<List*>(_t);
-    vector<T*> terms;
+    vector<T> terms;
     if (s) {
       for (int i = 0; i < s->arity(); i++)
         terms.push_back(s->args(i));
@@ -155,30 +155,30 @@ public:
   }
 
   void next() { _index++; }
-  T* currentItem() const { return _totalTerms[_index]; }
+  T currentItem() const { return _totalTerms[_index]; }
   bool isDone() const { return _index >= _totalTerms.size(); }
 
 private:
-  DFSIterator(T *t): _index(0), _t(t) {}
-  vector<T*> makeDFSTree(vector<T*> _inputTerms) {
-    vector<T*> outputTerms;
-    vector<T*> subTerms;
+  DFSIterator(T t): _index(0), _t(t) {}
+  vector<T> makeDFSTree(vector<T> _inputTerms) {
+    vector<T> outputTerms;
+    vector<T> subTerms;
 
-    for (T* t : _inputTerms) {
+    for (T t : _inputTerms) {
       Struct* s = dynamic_cast<Struct*>(t);
       List* l = dynamic_cast<List*>(t);
       if (s) {
         outputTerms.push_back(new Atom(s->name().symbol()));
         for (int i = 0; i < s->arity(); i++)
           subTerms.push_back(s->args(i));
-        vector<T*> childrenTerms = makeDFSTree(subTerms);
+        vector<T> childrenTerms = makeDFSTree(subTerms);
         subTerms.clear();
         outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
       } else if (l) {
         outputTerms.push_back(new List);
         for (int j = 0; j < l->elements()->size(); j++)
           subTerms.push_back(l->elements()->at(j));
-        vector<T*> childrenTerms = makeDFSTree(subTerms);
+        vector<T> childrenTerms = makeDFSTree(subTerms);
         subTerms.clear();
         outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
       } else {
@@ -189,8 +189,8 @@ private:
   }
 
   int _index;
-  T* _t;
-  vector<T*> _totalTerms;
+  T _t;
+  vector<T> _totalTerms;
 };
 
 #endif

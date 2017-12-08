@@ -22,9 +22,9 @@ public:
       return symbol();
   }
 
-  Iterator<Term>* createNormalIterator();
-  Iterator<Term>* createBFSIterator();
-  Iterator<Term>* createDFSIterator();
+  Iterator<Term*>* createNormalIterator();
+  Iterator<Term*>* createBFSIterator();
+  Iterator<Term*>* createDFSIterator();
 
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }

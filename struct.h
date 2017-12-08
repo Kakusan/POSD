@@ -16,9 +16,9 @@ public:
   Struct(Atom const &name, std::vector<Term *> args):Term(name.symbol()), _name(name), _args(args) {
   }
 
-  Iterator<Term>* createNormalIterator();
-  Iterator<Term>* createBFSIterator();
-  Iterator<Term>* createDFSIterator();
+  Iterator<Term*>* createNormalIterator();
+  Iterator<Term*>* createBFSIterator();
+  Iterator<Term*>* createDFSIterator();
 
   int arity() {
     return _args.size();

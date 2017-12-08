@@ -22,9 +22,9 @@ public:
     }
   }
 
-  Iterator<Term>* createNormalIterator();
-  Iterator<Term>* createBFSIterator();
-  Iterator<Term>* createDFSIterator();
+  Iterator<Term*>* createNormalIterator();
+  Iterator<Term*>* createBFSIterator();
+  Iterator<Term*>* createDFSIterator();
 
   string symbol() const {
     string output = "[";
