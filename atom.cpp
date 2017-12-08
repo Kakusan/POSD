@@ -1,17 +1,17 @@
 #include "atom.h"
 #include "iterator.h"
 
-Iterator* Atom::createNormalIterator()
+Iterator<Term>* Atom::createNormalIterator()
 {
-  return new NormalIterator<Atom>(this);
+  return new NormalIterator<Term>(this);
 }
 
-Iterator* Atom::createBFSIterator()
+Iterator<Term>* Atom::createBFSIterator()
 {
-  return new BFSIterator<Atom>(this);
+  return new BFSIterator<Term>(this);
 }
 
-Iterator* Atom::createDFSIterator()
+Iterator<Term>* Atom::createDFSIterator()
 {
-  return new DFSIterator<Atom>(this);
+  return new DFSIterator<Term>(this);
 }

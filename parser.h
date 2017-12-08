@@ -70,7 +70,7 @@ public:
       throw string("unexpected token");
     }
   }
-  //std::cout << "逗號囉" << std::endl;
+
   void matchings() {
     do {
       if (_currentToken == ',') {

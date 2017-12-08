@@ -9,6 +9,7 @@
 
 using std::string;
 
+template<class T> 
 class Iterator;
 
 class Variable : public Term {
@@ -21,9 +22,9 @@ public:
       return symbol();
   }
 
-  Iterator* createNormalIterator();
-  Iterator* createBFSIterator();
-  Iterator* createDFSIterator();
+  Iterator<Term>* createNormalIterator();
+  Iterator<Term>* createBFSIterator();
+  Iterator<Term>* createDFSIterator();
 
   void BecomeCouple(Variable* v) { variables.push_back(v); }
   bool IsUsed() { return isUsed; }

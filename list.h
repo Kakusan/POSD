@@ -9,6 +9,7 @@
 using std::string;
 using std::vector;
 
+template<class T> 
 class Iterator;
 
 class List : public Term {
@@ -21,9 +22,9 @@ public:
     }
   }
 
-  Iterator* createNormalIterator();
-  Iterator* createBFSIterator();
-  Iterator* createDFSIterator();
+  Iterator<Term>* createNormalIterator();
+  Iterator<Term>* createBFSIterator();
+  Iterator<Term>* createDFSIterator();
 
   string symbol() const {
     string output = "[";

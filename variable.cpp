@@ -1,17 +1,17 @@
 #include "variable.h"
 #include "iterator.h"
 
-Iterator* Variable::createNormalIterator()
+Iterator<Term>* Variable::createNormalIterator()
 {
-  return new NormalIterator<Variable>(this);
+  return new NormalIterator<Term>(this);
 }
 
-Iterator* Variable::createBFSIterator()
+Iterator<Term>* Variable::createBFSIterator()
 {
-  return new BFSIterator<Variable>(this);
+  return new BFSIterator<Term>(this);
 }
 
-Iterator* Variable::createDFSIterator()
+Iterator<Term>* Variable::createDFSIterator()
 {
-  return new DFSIterator<Variable>(this);
+  return new DFSIterator<Term>(this);
 }
