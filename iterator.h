@@ -100,17 +100,14 @@ private:
     for (T t : _inputTerms) {
       Struct* s = dynamic_cast<Struct*>(t);
       List* l = dynamic_cast<List*>(t);
+      outputTerms.push_back(t);
       if (s) {
-        outputTerms.push_back(new Atom(s->name().symbol()));
         for (int i = 0; i < s->arity(); i++)
           subTerms.push_back(s->args(i));
       } else if (l) {
-        outputTerms.push_back(new List);
         for (int j = 0; j < l->elements()->size(); j++)
           subTerms.push_back(l->elements()->at(j));
-      } else {
-        outputTerms.push_back(t);
-      }
+      } 
     }
     if (subTerms.size() > 0) {
       vector<T> childrenTerms = makeBFSTree(subTerms);
@@ -148,10 +145,10 @@ public:
     }
     _totalTerms = makeDFSTree(terms);
   
-    std::cout << "走訪順序為[ ";
-    for(int i = 0; i < _totalTerms.size() - 1; i++)
-      std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
-    std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
+    // std::cout << "走訪順序為[ ";
+    // for(int i = 0; i < _totalTerms.size() - 1; i++)
+    //   std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
+    // std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
   }
 
   void next() { _index++; }
@@ -167,22 +164,19 @@ private:
     for (T t : _inputTerms) {
       Struct* s = dynamic_cast<Struct*>(t);
       List* l = dynamic_cast<List*>(t);
+      outputTerms.push_back(t);
       if (s) {
-        outputTerms.push_back(new Atom(s->name().symbol()));
         for (int i = 0; i < s->arity(); i++)
           subTerms.push_back(s->args(i));
         vector<T> childrenTerms = makeDFSTree(subTerms);
         subTerms.clear();
         outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
       } else if (l) {
-        outputTerms.push_back(new List);
         for (int j = 0; j < l->elements()->size(); j++)
           subTerms.push_back(l->elements()->at(j));
         vector<T> childrenTerms = makeDFSTree(subTerms);
         subTerms.clear();
         outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
-      } else {
-        outputTerms.push_back(t);
       }
     }
     return outputTerms;

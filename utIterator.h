@@ -92,7 +92,7 @@ TEST(iterator, nested_struct_BFSIterator) {
   itStruct->first();
   ASSERT_EQ("1", itStruct->currentItem()->symbol());
   itStruct->next();
-  ASSERT_EQ("t", itStruct->currentItem()->symbol());
+  ASSERT_EQ("t(X, 2)", itStruct->currentItem()->symbol());
   itStruct->next();
   ASSERT_EQ("Y", itStruct->currentItem()->symbol());
   itStruct->next();
@@ -115,7 +115,7 @@ TEST(iterator, nested_list_BFSIterator) {
   itList->first();
   ASSERT_EQ("1", itList->currentItem()->symbol());
   itList->next();
-  ASSERT_EQ("[]", itList->currentItem()->symbol());
+  ASSERT_EQ("[X, 2]", itList->currentItem()->symbol());
   itList->next();
   ASSERT_EQ("Y", itList->currentItem()->symbol());
   itList->next();
@@ -138,7 +138,7 @@ TEST(iterator, nested_struct_BFSIterator2) {
   itStruct->first();
   ASSERT_EQ("1", itStruct->currentItem()->symbol());
   itStruct->next();
-  ASSERT_EQ("[]", itStruct->currentItem()->symbol());
+  ASSERT_EQ("[X, 2]", itStruct->currentItem()->symbol());
   itStruct->next();
   ASSERT_EQ("Y", itStruct->currentItem()->symbol());
   itStruct->next();
@@ -161,7 +161,7 @@ TEST(iterator, nested_list_BFSIterator2) {
   itList->first();
   ASSERT_EQ("1", itList->currentItem()->symbol());
   itList->next();
-  ASSERT_EQ("t", itList->currentItem()->symbol());
+  ASSERT_EQ("t(X, 2)", itList->currentItem()->symbol());
   itList->next();
   ASSERT_EQ("Y", itList->currentItem()->symbol());
   itList->next();
@@ -184,7 +184,7 @@ TEST(iterator, nested_struct_DFSIterator) {
   itStruct->first();
     ASSERT_EQ("1", itStruct->currentItem()->symbol());
     itStruct->next();
-    ASSERT_EQ("t", itStruct->currentItem()->symbol());
+    ASSERT_EQ("t(X, 2)", itStruct->currentItem()->symbol());
     itStruct->next();
     ASSERT_EQ("X", itStruct->currentItem()->symbol());
     itStruct->next();
@@ -207,7 +207,7 @@ TEST(iterator, nested_list_DFSIterator) {
   itList->first();
   ASSERT_EQ("1", itList->currentItem()->symbol());
   itList->next();
-  ASSERT_EQ("[]", itList->currentItem()->symbol());
+  ASSERT_EQ("[X, 2]", itList->currentItem()->symbol());
   itList->next();
   ASSERT_EQ("X", itList->currentItem()->symbol());
   itList->next();
@@ -230,7 +230,7 @@ TEST(iterator, nested_struct_DFSIterator2) {
   itStruct->first();
     ASSERT_EQ("1", itStruct->currentItem()->symbol());
     itStruct->next();
-    ASSERT_EQ("[]", itStruct->currentItem()->symbol());
+    ASSERT_EQ("[X, 2]", itStruct->currentItem()->symbol());
     itStruct->next();
     ASSERT_EQ("X", itStruct->currentItem()->symbol());
     itStruct->next();
@@ -253,7 +253,7 @@ TEST(iterator, nested_list_DFSIterator2) {
   itList->first();
   ASSERT_EQ("1", itList->currentItem()->symbol());
   itList->next();
-  ASSERT_EQ("t", itList->currentItem()->symbol());
+  ASSERT_EQ("t(X, 2)", itList->currentItem()->symbol());
   itList->next();
   ASSERT_EQ("X", itList->currentItem()->symbol());
   itList->next();
