@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <string>
+#include <stack>
 
 #include "atom.h"
 #include "number.h"
@@ -10,48 +11,50 @@
 #include "scanner.h"
 #include "struct.h"
 #include "list.h"
-#include "utParser.h"
-#include "node.h"
+#include "expression.h"
 
 using std::string;
+using std::stack;
 
-class Parser {
+class Parser{
 public:
   Parser(Scanner scanner) : _scanner(scanner), _terms() {}
 
-  Term* createTerm() {
+  Term* createTerm(){
     int token = _scanner.nextToken();
-    _currentToken = token;
-    if (token == VAR) {
+    
+    //!!!!!!!!!!
+    _currentToken = _scanner.lastChar();
+    
+    if(token == VAR){
       return new Variable(symtable[_scanner.tokenValue()].first);
-    } else if (token == NUMBER) {
+    }else if(token == NUMBER){
       return new Number(_scanner.tokenValue());
-    } else if (token == ATOM || token == ATOMSC) {
-      Atom *atom = new Atom(symtable[_scanner.tokenValue()].first);
-      if (_scanner.currentChar() == '(') {
+    }else if(token == ATOM || token == ATOMSC){
+      Atom* atom = new Atom(symtable[_scanner.tokenValue()].first);
+      if(_scanner.currentChar() == '(' ) {
         return structure();
-      } else
+      }
+      else
         return atom;
-    } else if (token == '[') {
+    }
+    else if(token == '['){
       return list();
-    } return nullptr;
+    }
+
+    return nullptr;
   }
 
-  Term* structure() {
+
+
+  Term * structure() {
     Atom structName = Atom(symtable[_scanner.tokenValue()].first);
     int startIndexOfStructArgs = _terms.size();
     _scanner.nextToken();
     createTerms();
-    if (_currentToken == ')') {
-      vector<Term*> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
-
-      for (int i = 0; i < args.size(); i++) {
-        for (int j = 0; j < _totalArgs.size() - 1; j++) {
-          if(args[i]->symbol() == _totalArgs[j]->symbol())
-            args[i] = _totalArgs[j];
-        }
-      }
-
+    if(_currentToken == ')')
+    {
+      vector<Term *> args(_terms.begin() + startIndexOfStructArgs, _terms.end());
       _terms.erase(_terms.begin() + startIndexOfStructArgs, _terms.end());
       return new Struct(structName, args);
     } else {
@@ -59,98 +62,100 @@ public:
     }
   }
 
-  Term* list() {
+  Term * list() {
     int startIndexOfListArgs = _terms.size();
     createTerms();
-    if (_currentToken == ']') {
+    if(_currentToken == ']')
+    {
       vector<Term *> args(_terms.begin() + startIndexOfListArgs, _terms.end());
       _terms.erase(_terms.begin() + startIndexOfListArgs, _terms.end());
+      if(args.size()==0){
+        return new Atom("[]");
+      }
       return new List(args);
     } else {
       throw string("unexpected token");
     }
   }
 
-  void matchings() {
-    do {
-      if (_currentToken == ',') {
-        currentOperator = ',';
-        _currentToken = '0';
-        Node* currentNode = _node;
-        matchings();
-        Node* nextNode = _node;
-        _node = new Node(COMMA, currentNode, nextNode);
-      } else if (_currentToken == ';') {
-        _totalArgs.clear();
-        currentOperator = ';';
-        _currentToken = '0';
-        Node* currentNode = _node;
-        matchings();
-        Node* nextNode = _node;
-        _node = new Node(SEMICOLON, currentNode, nextNode);
-      } else {
-        Term* currentTerm = createTerm();
-        if (currentTerm != nullptr) {
-          currentTerm = searchForSameTerms(currentTerm);
-          _totalArgs.push_back(currentTerm);
-          _terms.push_back(currentTerm);
-          Node *currentNode = new Node(TERM, searchForSameTerms(currentTerm));
-          if ((_currentToken = _scanner.nextToken()) == '=') {
-            Term* nextTerm = createTerm();    
-            nextTerm = searchForSameTerms(nextTerm);
-            _totalArgs.push_back(nextTerm);
-            _terms.push_back(nextTerm);
-            Node *nextNode = new Node(TERM, searchForSameTerms(nextTerm));
-            _node = new Node(EQUALITY, currentNode, nextNode);
-          }
-        }
-      }
-    } while ((_currentToken = _scanner.nextToken()) == ',' || _currentToken == ';');
-  }
-
-  Term* searchForSameTerms(Term* t) {
-    for (int i = 0; i < _totalArgs.size(); i++) {
-      if(_totalArgs[i]->symbol() == t->symbol())
-        t = _totalArgs[i];
-    }
-    return t;
-  }
-
-  Node* expressionTree() {
-    return _node;
-  }
-
-  vector<Term*>& getTerms() {
+  vector<Term *> & getTerms() {
     return _terms;
+  }
+
+  void buildExpression(){
+    // createTerm();
+    // std::cout << _currentToken << "我進來囉\n";
+    disjunctionMatch();
+    restDisjunctionMatch();
+    // if (createTerm() != nullptr || _currentToken != '.')
+    //   throw string("expected token.");
+  }
+
+  void restDisjunctionMatch() {
+    if (_scanner.currentChar() == ';') {
+      createTerm();
+      disjunctionMatch();
+      Expression *right = _expStack.top();
+      _expStack.pop();
+      Expression *left = _expStack.top();
+      _expStack.pop();
+      _expStack.push(new DisjExpression(left, right));
+      restDisjunctionMatch();
+    }
+  }
+
+  void disjunctionMatch() {
+    conjunctionMatch();
+    restConjunctionMatch();
+  }
+
+  void restConjunctionMatch() {
+    if (_scanner.currentChar() == ',') {
+      createTerm();
+      conjunctionMatch();
+      Expression *right = _expStack.top();
+      _expStack.pop();
+      Expression *left = _expStack.top();
+      _expStack.pop();
+      _expStack.push(new ConjExpression(left, right));
+      restConjunctionMatch();
+    }
+  }
+
+  void conjunctionMatch() {
+    Term * left = createTerm();
+    if (createTerm() == nullptr && _currentToken == '=') {
+      Term * right = createTerm();
+      _expStack.push(new MatchExpression(left, right));
+    }
+  }
+
+  string getExpressionTree(){
+    return _expStack.top()->getExpression();
   }
 
 private:
   FRIEND_TEST(ParserTest, createArgs);
-  FRIEND_TEST(ParserTest, ListOfTermsEmpty);
-  FRIEND_TEST(ParserTest, listofTermsTwoNumber);
+  FRIEND_TEST(ParserTest,ListOfTermsEmpty);
+  FRIEND_TEST(ParserTest,listofTermsTwoNumber);
   FRIEND_TEST(ParserTest, createTerm_nestedStruct3);
+  FRIEND_TEST(ParserTest, createTerms);
 
   void createTerms() {
     Term* term = createTerm();
-    if (term != nullptr) {
+    if(term!=nullptr)
+    {
       _terms.push_back(term);
-      _totalArgs.push_back(term);
-      while ((_currentToken = _scanner.nextToken()) == ',') {
-        Term* nextTerm = createTerm();
-        _terms.push_back(nextTerm);
-        _totalArgs.push_back(nextTerm);
+      while((_currentToken = _scanner.nextToken()) == ',') {
+        _terms.push_back(createTerm());
       }
     }
   }
 
-private:
-  vector<Term*> _terms;
-  vector<Term*> _totalArgs;
+  vector<Term *> _terms;
   Scanner _scanner;
   int _currentToken;
-  int currentOperator;
-  Node* _node;
-
+  //MatchExp* _root;
+  stack<Expression*> _expStack;
 };
-
 #endif
