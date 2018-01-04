@@ -1,190 +1,182 @@
 #ifndef ITERATOR_H
 #define ITERATOR_H
 
-#include <typeinfo>
+#include <queue>
+using std::queue;
+
 #include "struct.h"
 #include "list.h"
-#include <vector>
+#include "node.h"
 
-using std::vector;
-
-template<class T> 
+template <class T>
 class Iterator {
 public:
-  virtual void first() = 0;
-  virtual void next() = 0;
-  virtual T currentItem() const = 0;
-  virtual bool isDone() const = 0;
+    virtual void first() = 0;
+    virtual void next() = 0;
+    virtual T currentItem() const = 0;
+    virtual bool isDone() const = 0;
 };
 
-template<class T> 
-class NormalIterator : public Iterator<T> {
+template <class T>
+class NullIterator :public Iterator<T>{
 public:
-  friend class Atom;
-  friend class Number;  
-  friend class Variable;
-  friend class Struct;
-  friend class List;
-  
-  void first() { _index = 0; }
-  void next() { _index++; }
-
-  T currentItem() const { 
-    Struct* s = dynamic_cast<Struct*>(_t);
-    List* l = dynamic_cast<List*>(_t);
-    if (s)
-      return s->args(_index);
-    else if (l)
-      return l->elements()->at(_index);
-    else 
-      return nullptr;
-  }
-
-  bool isDone() const { 
-    Struct* s = dynamic_cast<Struct*>(_t);
-    List* l = dynamic_cast<List*>(_t);
-    if (s)
-      return _index >= s->arity();
-    else if (l)
-      return _index >= l->elements()->size();
-    else 
-      return true;
-   }
-
+    friend class Term;
+    
+    void first(){}
+    
+    void next(){}
+    
+    T currentItem() const{
+        return nullptr;
+    }
+    
+    bool isDone() const{
+        return true;
+    }
+    
 private:
-  NormalIterator(T t): _index(0), _t(t) {}
-  int _index;
-  T _t;
+    NullIterator(T n) { }
 };
 
-template<class T> 
-class BFSIterator : public Iterator<T> {
+template <class T>
+class StructIterator :public Iterator<T> {
 public:
-  friend class Atom;
-  friend class Number;  
-  friend class Variable;
-  friend class Struct;
-  friend class List;
-
-  void first() { 
-    _index = 0; 
-
-    Struct* s = dynamic_cast<Struct*>(_t);
-    List* l = dynamic_cast<List*>(_t);
-    vector<T> terms;
-    if (s) {
-      for (int i = 0; i < s->arity(); i++)
-        terms.push_back(s->args(i));
-    } else if (l) {
-      for (int j = 0; j < l->elements()->size(); j++)
-        terms.push_back(l->elements()->at(j));
+    friend class Struct;
+    void first() {
+        _index = 0;
     }
-    _totalTerms = makeBFSTree(terms);
-  
-    // std::cout << "走訪順序為[ ";
-    // for(int i = 0; i < _totalTerms.size() - 1; i++)
-    //   std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
-    // std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
-  }
-
-  void next() { _index++; }
-  T currentItem() const { return _totalTerms[_index]; }
-  bool isDone() const { return _index >= _totalTerms.size(); }
-
+    
+    T currentItem() const {
+        return _s->args(_index);
+    }
+    
+    bool isDone() const {
+        return _index >= _s->arity();
+    }
+    
+    void next() {
+        _index++;
+    }
+    
 private:
-  BFSIterator(T t): _index(0), _t(t) {}
-  vector<T> makeBFSTree(vector<T> _inputTerms) {
-    vector<T> outputTerms;
-    vector<T> subTerms;
-
-    for (T t : _inputTerms) {
-      Struct* s = dynamic_cast<Struct*>(t);
-      List* l = dynamic_cast<List*>(t);
-      outputTerms.push_back(t);
-      if (s) {
-        for (int i = 0; i < s->arity(); i++)
-          subTerms.push_back(s->args(i));
-      } else if (l) {
-        for (int j = 0; j < l->elements()->size(); j++)
-          subTerms.push_back(l->elements()->at(j));
-      } 
-    }
-    if (subTerms.size() > 0) {
-      vector<T> childrenTerms = makeBFSTree(subTerms);
-      outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
-    }
-    return outputTerms;
-
-  }
-  int _index;
-  T _t;
-  vector<T> _totalTerms;
+    StructIterator(Struct * s): _index(0), _s(s) {}
+    
+    int _index;
+    Struct* _s;
 };
 
-template<class T> 
-class DFSIterator : public Iterator<T> {
+template <class T>
+class ListIterator :public Iterator<T> {
 public:
-  friend class Atom;
-  friend class Number;  
-  friend class Variable;
-  friend class Struct;
-  friend class List;
-
-  void first() { 
-    _index = 0; 
-
-    Struct* s = dynamic_cast<Struct*>(_t);
-    List* l = dynamic_cast<List*>(_t);
-    vector<T> terms;
-    if (s) {
-      for (int i = 0; i < s->arity(); i++)
-        terms.push_back(s->args(i));
-    } else if (l) {
-      for (int j = 0; j < l->elements()->size(); j++)
-        terms.push_back(l->elements()->at(j));
+    friend class List;
+    
+    void first() {
+        _index = 0;
     }
-    _totalTerms = makeDFSTree(terms);
-  
-    // std::cout << "走訪順序為[ ";
-    // for(int i = 0; i < _totalTerms.size() - 1; i++)
-    //   std::cout << dynamic_cast<Term*>(_totalTerms[i])->symbol() << ", ";
-    // std::cout << dynamic_cast<Term*>(_totalTerms[_totalTerms.size()-1])->symbol() << " ]喔" << std::endl;
-  }
-
-  void next() { _index++; }
-  T currentItem() const { return _totalTerms[_index]; }
-  bool isDone() const { return _index >= _totalTerms.size(); }
-
+    
+    T currentItem() const {
+        return _list->args(_index);
+    }
+    
+    bool isDone() const {
+        return _index >= _list->arity();
+    }
+    
+    void next() {
+        _index++;
+    }
 private:
-  DFSIterator(T t): _index(0), _t(t) {}
-  vector<T> makeDFSTree(vector<T> _inputTerms) {
-    vector<T> outputTerms;
-    vector<T> subTerms;
+    ListIterator(List * list): _index(0), _list(list) {}
+    
+    int _index;
+    List* _list;
+};
 
-    for (T t : _inputTerms) {
-      Struct* s = dynamic_cast<Struct*>(t);
-      List* l = dynamic_cast<List*>(t);
-      outputTerms.push_back(t);
-      if (s) {
-        for (int i = 0; i < s->arity(); i++)
-          subTerms.push_back(s->args(i));
-        vector<T> childrenTerms = makeDFSTree(subTerms);
-        subTerms.clear();
-        outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
-      } else if (l) {
-        for (int j = 0; j < l->elements()->size(); j++)
-          subTerms.push_back(l->elements()->at(j));
-        vector<T> childrenTerms = makeDFSTree(subTerms);
-        subTerms.clear();
-        outputTerms.insert(outputTerms.end(), childrenTerms.begin(), childrenTerms.end());
-      }
+template <class T>
+class DFSIterator :public Iterator<T> {
+public:
+    friend class Struct;
+    friend class List;
+    
+    void first() {
+        _dfsResults.clear();
+        DFS(_rootNode);
+        _index = 1;
     }
-    return outputTerms;
-  }
+    
+    T currentItem() const {
+        return _dfsResults[_index];
+    }
+    
+    bool isDone() const {
+        return _index >= _dfsResults.size();
+    }
+    
+    void next() {
+        _index++;
+    }
+    
+private:
+    DFSIterator(T root): _index(0), _rootNode(root) {}
+    
+    void DFS(T node) {
+        _dfsResults.push_back(node);
+        
+        Iterator<T> *it = node -> createIterator();
+        for (it->first(); !(it->isDone()); it->next())
+            DFS(it -> currentItem());
+    }
+    
+    int _index;
+    T _rootNode;
+    std::vector<T> _dfsResults;
+};
 
-  int _index;
-  T _t;
-  vector<T> _totalTerms;
+template <class T>
+class BFSIterator :public Iterator<T> {
+public:
+    friend class Struct;
+    friend class List;
+    
+    void first() {
+        _bfsResults.clear();
+        BFS();
+        _index = 1;
+    }
+    
+    T currentItem() const {
+        return _bfsResults[_index];
+    }
+    
+    bool isDone() const {
+        return _index >= _bfsResults.size();
+    }
+    
+    void next() {
+        _index++;
+    }
+    
+private:
+    BFSIterator(T root): _index(0), _rootNode(root) {}
+    
+    void BFS() {
+        queue<T> q;
+        q.push(_rootNode);
+        
+        while(!q.empty()) {
+            T frontNode = q.front();
+            q.pop();
+            _bfsResults.push_back(frontNode);
+            
+            Iterator<T> *it = frontNode -> createIterator();
+            for (it->first(); !(it->isDone()); it->next())
+                q.push(it -> currentItem());
+        }
+    }
+    
+    int _index, tmp = 0;
+    T _rootNode;
+    std::vector<T> _bfsResults;
 };
 
 #endif
